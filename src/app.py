@@ -1,18 +1,18 @@
 from flask import Flask, render_template, request, jsonify
-# from src.db import get_db_connection, return_db_connection
+from src.db import get_db_connection, return_db_connection
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def index():
-    # conn = get_db_connection()
-    # cursor = conn.cursor()
+    conn = get_db_connection()
+    cursor = conn.cursor()
     
-    # cursor.execute("SELECT 'hola mundo';")
-    # records = cursor.fetchall()
+    cursor.execute("SELECT 'hola mundo';")
+    records = cursor.fetchall()
 
-    # return_db_connection(conn)
+    return_db_connection(conn)
     records = "hola mundo"
     return render_template('index.html', records=records)
 
