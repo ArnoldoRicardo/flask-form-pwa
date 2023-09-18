@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from db import get_db_connection, return_db_connection
+from src.db import get_db_connection, return_db_connection
 
 
 app = Flask(__name__)
