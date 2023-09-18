@@ -13,7 +13,6 @@ def index():
     records = cursor.fetchall()
 
     return_db_connection(conn)
-    records = "hola mundo"
     return render_template('index.html', records=records)
 
 @app.route('/submit-form', methods=['POST'])
