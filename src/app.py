@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from flask import Flask, abort, jsonify, render_template, request
 from flask_bootstrap import Bootstrap4
@@ -43,14 +44,17 @@ def index():
 @app.route('/submit-form', methods=['POST'])
 def submit_form():
     try:
+        date = request.form.get('dateField')
+        date_obj = datetime.strptime(date, '%d/%m/%Y')
+        iso_format_date = date_obj.strftime('%Y-%m-%d')
         expense = Expense(
             total=request.form.get('total'),
             note=request.form.get('note'),
-            date=request.form.get('date')
+            date=iso_format_date
         )
         saved = insert_expense(expense)
         if saved:
-            return jsonify(expense.dict())
+            return jsonify(expense.model_dump())
     except ValueError as e:
         logger.error(f"Bad request: {e}")
         abort(400)
