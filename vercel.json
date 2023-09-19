@@ -10,5 +10,6 @@
       "src": "/(.*)",
       "dest": "src/app.py"
     }
-  ]
+  ],
+  "devCommand": "python src/app.py"
 }
