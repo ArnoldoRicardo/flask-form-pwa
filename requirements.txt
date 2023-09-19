@@ -1,3 +1,4 @@
+annotated-types==0.5.0
 asttokens==2.4.0
 autopep8==2.0.4
 backcall==0.2.0
@@ -26,6 +27,9 @@ psycopg2-binary==2.9.7
 ptyprocess==0.7.0
 pure-eval==0.2.2
 pycodestyle==2.11.0
+pydantic==2.3.0
+pydantic-core==2.6.3
+pydantic-settings==2.0.3
 pyflakes==3.1.0
 Pygments==2.16.1
 python-dotenv==1.0.0
