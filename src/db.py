@@ -1,12 +1,13 @@
+import logging
 from contextlib import contextmanager
 
-from dotenv import load_dotenv
 from psycopg2 import OperationalError, pool
-from psycopg2.extras import DictCursor
+from psycopg2.extras import RealDictCursor
 
 from src.config import config
 
-load_dotenv()
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 DATABASE_CONFIG = {
     'dbname': config.POSTGRES_DATABASE,
@@ -19,35 +20,40 @@ connection_pool = pool.SimpleConnectionPool(1, 10, **DATABASE_CONFIG)
 
 
 def is_connection_valid(conn):
-    """Verifica si la conexión a la base de datos sigue siendo válida."""
+    """Verify if  a connection is valid"""
     try:
-        # Ejecuta una consulta simple para verificar la conexión
+        # Execute a very simple statement to check if cursor is still valid
         cursor = conn.cursor()
         cursor.execute("SELECT 1")
         cursor.close()
         return True
     except OperationalError:
+        logger.error("Connection is not valid!")
         return False
 
 
 def get_db_connection():
+    """Get a connection from the pool."""
     try:
         conn = connection_pool.getconn()
-        conn.cursor_factory = DictCursor
+        conn.cursor_factory = RealDictCursor
         return conn
     except OperationalError:
-        print("Error al conectarse a la base de datos")
+        logger.error("Connection pool is empty!")
+        raise
 
 
 def return_db_connection(conn):
+    """Return a connection to the pool."""
     if not is_connection_valid(conn):
         conn.close()
-        conn = connection_pool.getconn()
+        conn = get_db_connection()
     connection_pool.putconn(conn)
 
 
 @contextmanager
 def db_connection():
+    """Get a connection from the pool."""
     conn = get_db_connection()
     try:
         yield conn
@@ -56,5 +62,5 @@ def db_connection():
 
 
 def close_connection_pool():
-    """Cierra todas las conexiones y el pool."""
+    """Close all connections in the pool."""
     connection_pool.closeall()
