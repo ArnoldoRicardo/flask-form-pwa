@@ -16,6 +16,7 @@ def get_all_expenses() -> List[Expense]:
             , date
             , note
         FROM expenses
+        ORDER BY date DESC
         """
 
         cursor.execute(query)
