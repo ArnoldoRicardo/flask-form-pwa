@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/* eslint-env jquery */
 
 window.addEventListener('online', function () {
   const savedFormData = localStorage.getItem('offlineFormData')
@@ -16,8 +17,15 @@ window.addEventListener('online', function () {
   }
 })
 
+$(document).ready(function () {
+  $('#dateField').datepicker({
+    format: 'dd/mm/yyyy',
+    language: 'es'
+  })
+})
+
 function createCard (data) {
-  // Crear los elementos necesarios para la tarjeta
+  // create card elements
   const card = document.createElement('div')
   card.className = 'card mb-3'
 
@@ -39,7 +47,7 @@ function createCard (data) {
   smallText.className = 'text-muted'
   smallText.innerText = 'Fecha: ' + data.date
 
-  // Agregar los elementos al cuerpo de la tarjeta y luego a la tarjeta
+  // add elements to the card
   cardTextDate.appendChild(smallText)
   cardBody.appendChild(cardTitle)
   cardBody.appendChild(cardTextTotal)
@@ -58,7 +66,11 @@ function sendFormData (formData) {
     .then(data => {
       const cardContainer = document.querySelector('.card-container')
       const newCard = createCard(data)
-      cardContainer.appendChild(newCard)
+      if (cardContainer.firstChild) {
+        cardContainer.insertBefore(newCard, cardContainer.firstChild)
+      } else {
+        cardContainer.appendChild(newCard)
+      }
     })
     .catch(error => {
       console.error('Error:', error)

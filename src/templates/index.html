@@ -5,14 +5,7 @@
     {{super()}}
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <style>
-        /* Estilo para el contenedor de las tarjetas para facilitar el
-        scroll infinito */
-        .card-container {
-            max-height: 500px; /* Ajusta según tus necesidades */
-            overflow-y: auto;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 {% endblock %}
 
 
@@ -27,6 +20,11 @@
         <div class="form-group">
             <label for="total">Cantidad:</label>
             <input type="number" id="total" name="total" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label form ="dateField">Fecha:</label>
+            <input type="text" id="dateField" name="dateField" class="form-control">
         </div>
 
     <div class="form-group">
@@ -62,7 +60,6 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function() {
@@ -75,4 +72,6 @@
         }
     </script>
     {{super()}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 {% endblock %}

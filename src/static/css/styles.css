@@ -1,0 +1,7 @@
+/* Estilo para el contenedor de las tarjetas para facilitar el
+    scroll infinito */
+    .card-container {
+        max-height: 500px; /* Ajusta según tus necesidades */
+        overflow-y: auto;
+    }
+
