@@ -1,4 +1,5 @@
 import os
+from contextlib import contextmanager
 
 from dotenv import load_dotenv
 from psycopg2 import pool
@@ -24,3 +25,12 @@ def get_db_connection():
 
 def return_db_connection(conn):
     connection_pool.putconn(conn)
+
+
+@contextmanager
+def db_connection():
+    conn = get_db_connection()
+    try:
+        yield conn
+    finally:
+        return_db_connection(conn)

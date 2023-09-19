@@ -1,39 +1,35 @@
-from src.db import get_db_connection, return_db_connection
+from src.db import db_connection
 
 
 def get_all_expenses():
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    with db_connection() as conn:
+        cursor = conn.cursor()
 
-    query = """
-    SELECT
-        id
-        , total
-        , date
-        , note
-    FROM expenses
-    """
+        query = """
+        SELECT
+            id
+            , total
+            , date
+            , note
+        FROM expenses
+        """
 
-    cursor.execute(query)
-    records = cursor.fetchall()
-
-    return_db_connection(conn)
+        cursor.execute(query)
+        records = cursor.fetchall()
 
     return records
 
 
 def insert_expense(total: float, note: str) -> bool:
-    conn = get_db_connection()
-    cursor = conn.cursor()
+    with db_connection() as conn:
+        cursor = conn.cursor()
 
-    query = """
-    INSERT INTO expenses (total, note)
-    VALUES (%s, %s)
-    """
+        query = """
+        INSERT INTO expenses (total, note)
+        VALUES (%s, %s)
+        """
 
-    cursor.execute(query, (total, note))
-    conn.commit()
-
-    return_db_connection(conn)
+        cursor.execute(query, (total, note))
+        conn.commit()
 
     return True
