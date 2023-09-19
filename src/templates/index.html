@@ -1,42 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PWA Form Example</title>
-    {# Link al manifiesto con Jinja #}
+{% extends "base.html" %}
+{% block title %}register expenses{% endblock %}
+
+{% block styles %}
+    {{super()}}
     <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
-
-    {# Link a los estilos con Jinja #}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-</head>
-<body>
+    <style>
+        /* Estilo para el contenedor de las tarjetas para facilitar el
+        scroll infinito */
+        .card-container {
+            max-height: 500px; /* Ajusta según tus necesidades */
+            overflow-y: auto;
+        }
+    </style>
+{% endblock %}
 
-<form id="myForm">
-    <label for="name">Nombre:</label>
-    <input type="text" id="name" name="name" required>
-    
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    
-    <input type="submit" value="Enviar">
-</form>
 
-<div id="response"></div>
-{{records}}
+{% block navbar %}
+<div class="navbar navbar-fixed-top">
+  <!-- ... -->
+</div>
+{% endblock %}
 
-{# Incluir el script JS con Jinja #}
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-            navigator.serviceWorker.register('{{ url_for("static", filename="sw.js") }}').then(function() {
-                console.log('Service Worker registrado con éxito.');
-            }, function(err) {
-                console.log('Registro de Service Worker fallido:', err);
+{% block content %}
+    <form id="myForm">
+        <div class="form-group">
+            <label for="total">Cantidad:</label>
+            <input type="number" id="total" name="total" class="form-control" required>
+        </div>
+
+    <div class="form-group">
+        <label for="note">Nota:</label>
+        <textarea id="note" name="note" class="form-control" rows="4"
+        placeholder="Añade una nota" required></textarea>
+    </div>
+
+    <input type="hidden" id="operationType" name="operationType">
+
+    <button type="button" class="btn btn-primary btn-block" onclick="submitForm('expenses')">Gasto</button>
+    <button type="button" class="btn btn-secondary btn-block" onclick="submitForm('income')">Ingreso</button>
+    </form>
+
+    <h2>Lista de Gastos</h2>
+    <div id="response"></div>
+    <div class="card-container">
+        {% for record in records %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ record.note }}</h5>
+                    <p class="card-text">Total: ${{ record.total }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Fecha: {{record.date}}
+                        </small>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('{{ url_for("static", filename="sw.js") }}').then(function() {
+                    console.log('Service Worker registrado con éxito.');
+                }, function(err) {
+                    console.log('Registro de Service Worker fallido:', err);
+                });
             });
-        });
-    }
-</script>
-</body>
-</html>
+        }
+    </script>
+    {{super()}}
+{% endblock %}

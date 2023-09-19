@@ -1,22 +1,4 @@
-document.getElementById('myForm').addEventListener('submit', function (event) {
-  event.preventDefault()
-
-  const formData = new FormData(event.target)
-
-  if (navigator.onLine) {
-    // Si hay conexión, envía directamente
-    sendFormData(formData)
-  } else {
-    // Si no hay conexión, almacena en localStorage
-    localStorage.setItem(
-      'offlineFormData',
-      JSON.stringify(Object.fromEntries(formData.entries())),
-    )
-    alert(
-      'Estás sin conexión. Tus datos se han guardado y se enviarán cuando vuelvas a estar en línea.',
-    )
-  }
-})
+/* eslint-env browser */
 
 window.addEventListener('online', function () {
   const savedFormData = localStorage.getItem('offlineFormData')
@@ -29,21 +11,78 @@ window.addEventListener('online', function () {
     }
 
     sendFormData(formData)
-    localStorage.removeItem('offlineFormData') // Borra la data guardada una vez enviada
+    // remove saved data from localStorage
+    localStorage.removeItem('offlineFormData')
   }
 })
 
-function sendFormData(formData) {
+function createCard (data) {
+  // Crear los elementos necesarios para la tarjeta
+  const card = document.createElement('div')
+  card.className = 'card mb-3'
+
+  const cardBody = document.createElement('div')
+  cardBody.className = 'card-body'
+
+  const cardTitle = document.createElement('h5')
+  cardTitle.className = 'card-title'
+  cardTitle.innerText = data.note
+
+  const cardTextTotal = document.createElement('p')
+  cardTextTotal.className = 'card-text'
+  cardTextTotal.innerText = 'Total: $' + data.total
+
+  const cardTextDate = document.createElement('p')
+  cardTextDate.className = 'card-text'
+
+  const smallText = document.createElement('small')
+  smallText.className = 'text-muted'
+  smallText.innerText = 'Fecha: ' + data.date
+
+  // Agregar los elementos al cuerpo de la tarjeta y luego a la tarjeta
+  cardTextDate.appendChild(smallText)
+  cardBody.appendChild(cardTitle)
+  cardBody.appendChild(cardTextTotal)
+  cardBody.appendChild(cardTextDate)
+  card.appendChild(cardBody)
+
+  return card
+}
+
+function sendFormData (formData) {
   fetch('/submit-form', {
     method: 'POST',
-    body: formData,
+    body: formData
   })
     .then(response => response.json())
     .then(data => {
-      document.getElementById('response').innerText =
-        data.message + ' Recibido: ' + data.name + ', ' + data.email
+      const cardContainer = document.querySelector('.card-container')
+      const newCard = createCard(data)
+      cardContainer.appendChild(newCard)
     })
     .catch(error => {
       console.error('Error:', error)
     })
+}
+
+// eslint-disable-next-line no-unused-vars
+function submitForm (type) {
+  // Set the operation type in the form
+  document.getElementById('operationType').value = type
+
+  const formData = new FormData(document.getElementById('myForm'))
+
+  if (navigator.onLine) {
+    // if have connection, send directly
+    sendFormData(formData)
+  } else {
+    // if no connection, store in localStorage
+    localStorage.setItem(
+      'offlineFormData',
+      JSON.stringify(Object.fromEntries(formData.entries()))
+    )
+    alert(
+      'Estás sin conexión. Tus datos se han guardado y se enviarán cuando vuelvas a estar en línea.'
+    )
+  }
 }
