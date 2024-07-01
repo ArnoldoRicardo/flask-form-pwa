@@ -11,7 +11,7 @@ decorator==5.1.1
 dominate==2.8.0
 executing==1.2.0
 flake8==6.1.0
-Flask==2.2.2
+Flask==2.2.5
 Flask-OAuthlib==0.9.6
 idna==3.4
 importlib-metadata==6.8.0
