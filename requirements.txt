@@ -4,7 +4,7 @@ autopep8==2.0.4
 backcall==0.2.0
 Bootstrap-Flask==2.3.0
 cachelib==0.10.2
-certifi==2023.7.22
+certifi==2024.7.4
 charset-normalizer==3.2.0
 click==8.1.7
 decorator==5.1.1
